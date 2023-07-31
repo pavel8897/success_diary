@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<div class="container">
+		<h3>Страница дня</h3>
+		<div class="todo">
+			<input type="text">
+			<input type="submit" value="Добавить успех">
+			<ul class="out"></ul>
+		</div>
+	</div>
+</body>
+</html>
+
+<script>
+	let inputEntry = document.querySelector('input[type=text]')
+	let btn = document.querySelector('input[type=submit]')
+	let ul = document.querySelector('ul')
+
+	btn.onclick = () => {
+		let text = inputEntry.value
+		let li = document.createElement('li')
+		li.innerHTML = text
+		ul.append(li)
+		inputEntry.value = ''
+	}
+</script>
