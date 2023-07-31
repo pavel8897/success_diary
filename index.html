@@ -22,11 +22,14 @@
 	let btn = document.querySelector('input[type=submit]')
 	let ul = document.querySelector('ul')
 
-	btn.onclick = () => {
+	btn.addEventListener('click', addCase)
+
+	function addCase() {
 		let text = inputEntry.value
 		let li = document.createElement('li')
 		li.innerHTML = text
 		ul.append(li)
 		inputEntry.value = ''
 	}
+
 </script>
