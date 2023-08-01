@@ -21,15 +21,37 @@
 	let inputEntry = document.querySelector('input[type=text]')
 	let btn = document.querySelector('input[type=submit]')
 	let ul = document.querySelector('ul')
+	let todoArr = []
+	let todos = ''
 
 	btn.addEventListener('click', addCase)
 
 	function addCase() {
 		let text = inputEntry.value
-		let li = document.createElement('li')
-		li.innerHTML = text
-		ul.append(li)
-		inputEntry.value = ''
+		let newTodo = {todo: text, del: false, checked: false, edit: false}
+		// let i = obj.length
+		todoArr.push(newTodo)
+		out()
+	}
+
+	function out() {
+		todos = ''
+		todoArr.forEach((item, i) => {
+			// let li = document.createElement('li')
+			todos += `
+				<li>
+					<input type="checkbox" id="item_${i}" ${item.checked ? 'checked' : ''}>
+					<label for="item_${i}">${item.todo}</label>
+					<button onclick="del()">Удалить</button>
+				</li>`
+			ul.innerHTML = todos
+			inputEntry.value = ''
+		})
+	}
+
+	function del(todo) {
+		console.log(todo)
 	}
 
 </script>
+
