@@ -56,12 +56,17 @@
 </style>
 
 <script>
-	let inputEntry = document.querySelector('input[type=text]')
-	let btn = document.querySelector('input[type=submit]')
-	let ul = document.querySelector('ul')
 	let todoArr = []
 	let todos = ''
+	let inputEntry = document.querySelector('input[type=text]')
+	let btn = document.querySelector('input[type=submit]')
+	let ul = document.querySelector('ul')	
 	let editValue = ''
+
+	if(localStorage.getItem('arrTodos') != undefined) {
+		todoArr = JSON.parse(localStorage.getItem('arrTodos'))
+		out()
+	}
 
 	btn.addEventListener('click', addCase)
 
@@ -71,7 +76,8 @@
 		if(text != '') {
 			todoArr.push(newTodo)
 		}		
-		todoArr = Array.from(new Set(todoArr.map(JSON.stringify))).map(JSON.parse)
+		todoArr = Array.from(new Set(todoArr.map(JSON.stringify))).map(JSON.parse)		
+		localStorage.setItem('arrTodos', JSON.stringify(todoArr))
 		out()
 	}
 
