@@ -1,0 +1,38 @@
+.container {
+		width: 500px;
+		margin: 0 auto;
+	}
+
+	.out {
+		padding: 0;
+	}
+
+	ul li {
+		display: flex;
+		align-items: center;
+		margin-bottom: 7px;
+		border: 1px solid #000;
+		width: 100%;
+		background: lime;
+		justify-content: space-between;
+		padding: 10px;
+		cursor: pointer;
+		user-select: none;
+	}
+	
+	input[type=submit] {
+		background: #fff;
+		border: 2px solid grey;
+		border-radius: 10px;
+		padding: 5px 10px;
+		cursor: pointer;
+	}
+
+	input[type=text] {
+		border: 2px solid grey;
+		padding: 5px 10px;
+	}
+
+	ul li .text-through {
+		text-decoration: line-through;
+	}

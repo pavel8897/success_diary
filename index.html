@@ -3,10 +3,12 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
 	<title>Document</title>
 </head>
 <body>
 	<div class="container">
+		<div class="calendar" id="calendar"></div>
 		<h3>Страница дня</h3>
 		<div class="todo">
 			<input type="text">
@@ -14,120 +16,6 @@
 			<ul class="out"></ul>
 		</div>
 	</div>
+	<script src="script.js"></script>
 </body>
 </html>
-
-<style>
-	.container {
-		width: 500px;
-		margin: 0 auto;
-	}
-
-	.out {
-		padding: 0;
-	}
-
-	ul li {
-		display: flex;
-		align-items: center;
-		margin-bottom: 7px;
-		border: 1px solid #000;
-		width: 100%;
-		background: lime;
-		justify-content: space-between;
-		padding: 10px;
-		cursor: pointer;
-		user-select: none;
-	}
-	
-	input[type=submit] {
-		background: #fff;
-		border: 2px solid grey;
-		border-radius: 10px;
-		padding: 5px 10px;
-		cursor: pointer;
-	}
-
-	input[type=text] {
-		border: 2px solid grey;
-		padding: 5px 10px;
-	}
-
-</style>
-
-<script>
-	let todoArr = []
-	let todos = ''
-	let inputEntry = document.querySelector('input[type=text]')
-	let btn = document.querySelector('input[type=submit]')
-	let ul = document.querySelector('ul')	
-	let editValue = ''
-
-	if(localStorage.getItem('arrTodos') != undefined) {
-		todoArr = JSON.parse(localStorage.getItem('arrTodos'))
-		out()
-	}
-
-	btn.addEventListener('click', addCase)
-
-	function addCase() {
-		let text = inputEntry.value
-		let newTodo = {todo: text, checked: false, edit: false}
-		if(text != '') {
-			todoArr.push(newTodo)
-		}		
-		todoArr = Array.from(new Set(todoArr.map(JSON.stringify))).map(JSON.parse)		
-		localStorage.setItem('arrTodos', JSON.stringify(todoArr))
-		out()
-	}
-
-	function out() {
-		todos = ''
-		todoArr.forEach((item, i) => {
-			todos += `
-				<li>
-					<div>
-					<input onClick="onChecked(${i})" type="checkbox" id="item_${i}" ${item.checked ? 'checked' : ''}>
-					${item.edit ? `<input  onblur="onBlur(this.value, ${i})" type="text">` :
-					`<label style="${item.checked ? 'text-decoration: line-through' : ''}" for="item_${i}">${item.todo}</label>`}
-					</div>
-					<div>
-					<input onclick="onEdit(${i})" type="submit" value="Редактировать">
-					${item.checked ? `<input type="submit" value="Удалить" onClick="onDel(${i})">` : ''}
-					</div>
-				</li>`			
-		})
-		ul.innerHTML = todos
-		inputEntry.value = ''
-	}
-
-	function onDel(num) {
-		todoArr.splice(num, 1)
-		out()
-	}
-
-	function onChecked(num) {
-		todoArr[num].checked = !todoArr[num].checked
-		out()
-	}
-
-	function onEdit(num) {
-		todoArr[num].edit = !todoArr[num].edit
-		out()
-	}
-
-	function onBlur(value, num) {
-		if(value != '') {
-			todoArr[num].todo = value
-		}	
-		todoArr[num].edit = !todoArr[num].edit 
-		out()
-	}
-
-</script>
-
-
-
-
-
-
