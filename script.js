@@ -30,28 +30,43 @@ function outCase() {
 	todos = '';
 	todoArr.forEach((item, i) => {
 		
-		todos += `
-			<li>
+		todos += 
+			`<li>
 				<div>
-					<input onClick="checkCase(${i})" type="checkbox" id="item_${i}" ${item.checked ? 'checked' : ''}>
-					${item.edit ? `<input onblur="fixCase(this.value, ${i})" value=${item.todo} type="text">` :
-					`<label for="item_${i}">${item.todo}</label>`}
+					<input class="check" atr=${i} type="checkbox" id="item_${i}" ${item.checked ? 'checked' : ''}>					
+					${item.edit ?
+						`<input onblur="fixCase(this.value, ${i})" value=${item.todo} type="text">`
+					:
+						`<label class="${item.checked ? 'text-through' : ''}" for="item_${i}">${item.todo}</label>`
+					}
 				</div>
 				<div>
-					<input onclick="editCase(${i})" type="submit" value="Редактировать">
-					${item.checked ? `<input type="submit" value="Удалить" onClick="delCase(${i})">` : ''}
+					<input class="edit" atr=${i} type="submit" value="Редактировать">
+					${item.checked ?
+						`<input class="del" atr=${i} type="submit" value="Удалить">`
+					:
+						''
+					}
 				</div>
 			</li>`
 	});
+	
 	ul.innerHTML = todos;
 	inputEntry.value = '';
 	localStorage.setItem('arrTodos', JSON.stringify(todoArr));
 }
 
-function delCase(num) {
-	todoArr.splice(num, 1);
-	outCase();
-}
+ul.addEventListener('click', function(e) {
+	let target = e.target;
+	let num = e.target.getAttribute('atr');
+	if(target.classList.contains('check')) {
+		checkCase(num);
+	}else if (target.classList.contains('edit')) {
+		editCase(num);
+	}else if (target.classList.contains('del')) {
+		delCase(num);
+	}
+})
 
 function checkCase(num) {
 	todoArr[num].checked = !todoArr[num].checked;
@@ -65,6 +80,11 @@ function editCase(num) {
 	outCase();
 }
 
+function delCase(num) {
+	todoArr.splice(num, 1);
+	outCase();
+}
+
 function fixCase(value, num) {
     if(value != '') {
         todoArr[num].todo = value;
@@ -75,7 +95,6 @@ function fixCase(value, num) {
 
 /*
     ToDo:
-	- onclick="onEdit(${i})" (поправить на делегирование)
 	- style="${item.checked ? 'text-decoration: line-through' : ''}" (решить путём навешивания классов)
 
 
