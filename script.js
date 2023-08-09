@@ -22,15 +22,15 @@ function addCase() {
 	if(text != '') {
 		todoArr.push(newTodo);
 	}		
-	todoArr = Array.from(new Set(todoArr.map(JSON.stringify))).map(JSON.parse)	;	
+	todoArr = Array.from(new Set(todoArr.map(JSON.stringify))).map(JSON.parse);	
 	outCase();
 }
 
 function outCase() {		
 	todos = '';
-	todoArr.forEach((item, i) => {
-		
-		todos += 
+	
+	todoArr.forEach((item, i) => {		
+		todos +=
 			`<li>
 				<div>
 					<input class="check" atr=${i} type="checkbox" id="item_${i}" ${item.checked ? 'checked' : ''}>					
@@ -71,8 +71,6 @@ ul.addEventListener('click', function(e) {
 function checkCase(num) {
 	todoArr[num].checked = !todoArr[num].checked;
 	outCase();
-	// const labelElement = ul.querySelector(`label[for="item_${num}"]`)
-	// labelElement.classList.toggle('text-through')
 }
 
 function editCase(num) {
@@ -93,10 +91,154 @@ function fixCase(value, num) {
     outCase();
 }
 
-/*
-    ToDo:
-	- style="${item.checked ? 'text-decoration: line-through' : ''}" (решить путём навешивания классов)
+/*Calendar*/
 
+let calendar = document.querySelector('#calendar');
+let body = document.querySelector('.body');
+let info = document.querySelector('.info');
+
+let prev = document.querySelector('.prev');
+let next = document.querySelector('.next');
+
+let date = new Date();
+let year = date.getFullYear();
+let month = date.getMonth();
+
+draw(body, year, month);
+
+function getMonthName(month) {
+	const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+	return monthNames[month];
+}
+
+info.textContent = year + ' ' + getMonthName(month);
+
+prev.addEventListener('click', function() {
+	if(month===0) {
+		month = 11;
+		year--;
+	}else{
+		month--;
+	}
+
+	info.textContent = year + ' ' + getMonthName(month);
+	draw(body, year, month)
+})
+
+next.addEventListener('click', function() {		
+	if(month===11) {
+		month = 0;
+		year++;
+	}else{
+		month++;
+	}
+	
+	info.textContent = year + ' ' + getMonthName(month);
+	draw(body, year, month)
+})
+
+function draw(body, year, month) {
+	let arr = range(getLastDay(year, month));
+	let firstWeekDay = getFirstWeekDay(year, month);
+	let lastWeekDay = getLastWeekDay(year, month);
+	let nums = chunk(normalize(arr, firstWeekDay, 6 - lastWeekDay), 7);
+	
+	createTable(body, nums);
+
+	let td = document.querySelectorAll('tr td');
+
+	td.forEach((item, i) => {
+		item.onclick = function() {
+			let date = this.innerHTML
+			if(this.classList.contains('active')) {
+				this.classList.remove('active');
+			}else{
+				td.forEach(item => item.classList.remove('active'));
+				this.classList.add('active');
+			}
+		}
+	})
+}
+
+function createTable(parent, arr) {
+	parent.textContent = '';
+	let cells = [];
+	console.log(arr);
+	for(let sub of arr) {
+		let tr = document.createElement('tr');
+
+		for(let num of sub) {
+			let td = document.createElement('td');
+			td.textContent = num;
+			tr.appendChild(td);
+
+			cells.push(tr);
+		}
+		parent.appendChild(tr);
+	}
+	
+	return cells;
+}
+
+function normalize(arr, left, right) {
+	for (let i = 0; i < left; i++) {
+		arr.unshift('');
+	}
+	for (var i = 0; i < right; i++) {
+		arr.push('');
+	}
+	
+	return arr;	
+}
+
+function getFirstWeekDay(year, month) {
+	let date = new Date(year, month, 1);
+	let num = date.getDay();
+
+	if(num == 0) {
+		return 6;
+	}else{
+		return num - 1;
+	}
+}
+
+function getLastWeekDay(year, month) {
+	let date = new Date(year, month+1, 0);
+	let num = date.getDay();
+
+	if(num == 0) {
+		return 6;
+	}else{
+		return num - 1;
+	}
+}
+
+function getLastDay(year, month) {
+	let date = new Date(year, month + 1, 0);
+	return date.getDate();
+}
+
+function range(count) {
+	let arr = [];
+	for(i=1;i<=count;i++) {
+		arr.push(i);
+	}
+	return arr;
+}
+
+function chunk(arr, n) {
+	let result = [];
+	let count = Math.ceil(arr.length / n);
+	
+	for (let i = 0; i < count; i++) {
+		let elems = arr.splice(0, n);
+		result.push(elems);
+	}
+	
+	return result;
+}
+
+/*
 
 draw - отрисовка таблицы
 createTable - создание таблицы (вёрсика)

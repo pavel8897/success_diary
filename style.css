@@ -1,38 +1,75 @@
 .container {
-		width: 500px;
-		margin: 0 auto;
-	}
+	width: 800px;
+	margin: 0 auto;
+	display: flex;
+	gap: 40px;
+}
 
-	.out {
-		padding: 0;
-	}
+.out {
+	padding: 0;
+}
 
-	ul li {
-		display: flex;
-		align-items: center;
-		margin-bottom: 7px;
-		border: 1px solid #000;
-		width: 100%;
-		background: lime;
-		justify-content: space-between;
-		padding: 10px;
-		cursor: pointer;
-		user-select: none;
-	}
-	
-	input[type=submit] {
-		background: #fff;
-		border: 2px solid grey;
-		border-radius: 10px;
-		padding: 5px 10px;
-		cursor: pointer;
-	}
+ul li {
+	display: flex;
+	align-items: center;
+	margin-bottom: 7px;
+	border: 1px solid #000;
+	width: 100%;
+	background: lime;
+	justify-content: space-between;
+	padding: 10px;
+	cursor: pointer;
+	user-select: none;
+}
 
-	input[type=text] {
-		border: 2px solid grey;
-		padding: 5px 10px;
-	}
+input[type=submit] {
+	background: #fff;
+	border: 2px solid grey;
+	border-radius: 10px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
 
-	ul li .text-through {
-		text-decoration: line-through;
-	}
+input[type=text] {
+	border: 2px solid grey;
+	padding: 5px 10px;
+}
+
+ul li .text-through {
+	text-decoration: line-through;
+	color: red;
+}
+
+/*Calendar*/
+
+#calendar {
+	display: inline-block;
+}
+#calendar td {
+	cursor: pointer;
+}
+#calendar td.active {
+	background-color: red;
+	color: #000;
+}
+#calendar td, #calendar th {
+	padding: 10px;
+	border: 1px solid black;
+	text-align: center;
+}
+
+#calendar .nav, #calendar .info {
+	text-align: center;
+}
+#calendar a {
+	color: blue;
+	font-size: 25px;
+	text-decoration: none;
+}
+#calendar a:hover {
+	color: red;
+}
+
+#calendar .active {
+	color: red;
+}
