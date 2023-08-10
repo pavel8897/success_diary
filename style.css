@@ -22,7 +22,7 @@ ul li {
 	user-select: none;
 }
 
-input[type=submit] {
+.btn {
 	background: #fff;
 	border: 2px solid grey;
 	border-radius: 10px;
@@ -45,6 +45,10 @@ ul li .text-through {
 #calendar {
 	display: inline-block;
 }
+#calendar table {
+	border-collapse: collapse;
+	height: 280px;
+}
 #calendar td {
 	cursor: pointer;
 }
@@ -52,10 +56,18 @@ ul li .text-through {
 	background-color: red;
 	color: #000;
 }
+#calendar td.note {
+	background-color: green;
+	color: #000;
+}
 #calendar td, #calendar th {
 	padding: 10px;
 	border: 1px solid black;
 	text-align: center;
+}
+
+#calendar .nav {
+	margin-bottom: 20px;
 }
 
 #calendar .nav, #calendar .info {

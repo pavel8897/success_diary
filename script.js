@@ -1,7 +1,7 @@
 let todoArr = [];
 let todos = '';
 let inputEntry = document.querySelector('input[type=text]');
-let btn = document.querySelector('input[type=submit]');
+let btn = document.querySelector('.addCase');
 let ul = document.querySelector('ul');
 let editValue = '';
 
@@ -41,9 +41,10 @@ function outCase() {
 					}
 				</div>
 				<div>
-					<input class="edit" atr=${i} type="submit" value="Редактировать">
+					<button class="btn edit" atr=${i}>Редактировать</button>
 					${item.checked ?
-						`<input class="del" atr=${i} type="submit" value="Удалить">`
+						`<button class="del btn" atr=${i}>Удалить</button>`
+						
 					:
 						''
 					}
@@ -96,6 +97,7 @@ function fixCase(value, num) {
 let calendar = document.querySelector('#calendar');
 let body = document.querySelector('.body');
 let info = document.querySelector('.info');
+let addDate = document.querySelector('.addDate');
 
 let prev = document.querySelector('.prev');
 let next = document.querySelector('.next');
@@ -110,6 +112,8 @@ function getMonthName(month) {
 	const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 	return monthNames[month];
 }
+
+addDate.addEventListener('click', setDate)
 
 info.textContent = year + ' ' + getMonthName(month);
 
@@ -144,26 +148,13 @@ function draw(body, year, month) {
 	let nums = chunk(normalize(arr, firstWeekDay, 6 - lastWeekDay), 7);
 	
 	createTable(body, nums);
-
-	let td = document.querySelectorAll('tr td');
-
-	td.forEach((item, i) => {
-		item.onclick = function() {
-			let date = this.innerHTML
-			if(this.classList.contains('active')) {
-				this.classList.remove('active');
-			}else{
-				td.forEach(item => item.classList.remove('active'));
-				this.classList.add('active');
-			}
-		}
-	})
+	return arr;
 }
 
 function createTable(parent, arr) {
 	parent.textContent = '';
 	let cells = [];
-	console.log(arr);
+	
 	for(let sub of arr) {
 		let tr = document.createElement('tr');
 
@@ -178,6 +169,39 @@ function createTable(parent, arr) {
 	}
 	
 	return cells;
+}
+
+let td = document.querySelectorAll('tr td');
+
+td.forEach((item, i) => {
+	item.onclick = function() {
+		if(this.classList.contains('active')) {
+			this.classList.remove('active');
+		}else{
+			td.forEach(item => item.classList.remove('active'));
+			this.classList.add('active');
+		}
+	}
+})
+
+function setDate() {
+	let arr = range(getLastDay(year, month));
+	let firstWeekDay = getFirstWeekDay(year, month);
+	let lastWeekDay = getLastWeekDay(year, month);
+	// let nums = chunk(normalize(arr, firstWeekDay, 6 - lastWeekDay), 7);
+	// console.log(arr, todoArr);
+
+	td.forEach((item, i) => {
+		if(item.classList.contains('active')) {
+			item.classList.remove('active')
+			item.classList.add('note')
+			arr[item.innerHTML - 1] = todoArr
+			console.log(arr)
+		}
+	})
+
+	// console.log(nums, todoArr);
+
 }
 
 function normalize(arr, left, right) {
