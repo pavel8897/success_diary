@@ -9,7 +9,7 @@
 	padding: 0;
 }
 
-ul li {
+.out li {
 	display: flex;
 	align-items: center;
 	margin-bottom: 7px;
@@ -20,6 +20,11 @@ ul li {
 	padding: 10px;
 	cursor: pointer;
 	user-select: none;
+}
+
+.out li .text-through {
+	text-decoration: line-through;
+	color: red;
 }
 
 .btn {
@@ -33,11 +38,6 @@ ul li {
 input[type=text] {
 	border: 2px solid grey;
 	padding: 5px 10px;
-}
-
-ul li .text-through {
-	text-decoration: line-through;
-	color: red;
 }
 
 /*Calendar*/

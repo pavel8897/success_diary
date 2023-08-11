@@ -26,7 +26,7 @@ function addCase() {
 	outCase();
 }
 
-function outCase() {		
+function outCase() {
 	todos = '';
 	
 	todoArr.forEach((item, i) => {		
@@ -98,6 +98,7 @@ let calendar = document.querySelector('#calendar');
 let body = document.querySelector('.body');
 let info = document.querySelector('.info');
 let addDate = document.querySelector('.addDate');
+let eventOut = document.querySelector('.event');
 
 let prev = document.querySelector('.prev');
 let next = document.querySelector('.next');
@@ -112,8 +113,6 @@ function getMonthName(month) {
 	const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 	return monthNames[month];
 }
-
-addDate.addEventListener('click', setDate)
 
 info.textContent = year + ' ' + getMonthName(month);
 
@@ -171,12 +170,16 @@ function createTable(parent, arr) {
 	return cells;
 }
 
-let td = document.querySelectorAll('tr td');
+
+let td = document.querySelectorAll('td');
+addDate.addEventListener('click', setDate);
 
 td.forEach((item, i) => {
 	item.onclick = function() {
 		if(this.classList.contains('active')) {
 			this.classList.remove('active');
+		}else if(this.classList.contains('note')) {
+			getEvent(item);
 		}else{
 			td.forEach(item => item.classList.remove('active'));
 			this.classList.add('active');
@@ -185,23 +188,43 @@ td.forEach((item, i) => {
 })
 
 function setDate() {
-	let arr = range(getLastDay(year, month));
-	let firstWeekDay = getFirstWeekDay(year, month);
-	let lastWeekDay = getLastWeekDay(year, month);
-	// let nums = chunk(normalize(arr, firstWeekDay, 6 - lastWeekDay), 7);
-	// console.log(arr, todoArr);
-
+	let arr = localgetCalendar();
 	td.forEach((item, i) => {
 		if(item.classList.contains('active')) {
-			item.classList.remove('active')
-			item.classList.add('note')
-			arr[item.innerHTML - 1] = todoArr
-			console.log(arr)
+			item.classList.remove('active');
+			item.classList.add('note');
+			arr[i-1] = todoArr;
 		}
 	})
+	console.log(arr);
+	localsetCalendar(arr);
+}
 
-	// console.log(nums, todoArr);
+function localsetCalendar(arr) {
+	localStorage.setItem('arrTodo', JSON.stringify(arr));
+}
 
+function localgetCalendar() {
+	let arr = range(getLastDay(year, month));	
+	if(localStorage.getItem('arrTodo') != undefined) {
+		arr = JSON.parse(localStorage.getItem('arrTodo'));
+	}
+	return arr;
+}
+
+function getEvent(el) {
+	let arr = localgetCalendar();
+	let thing = arr[el.innerHTML - 1];
+	let out = '';
+
+	if(Array.isArray(thing)) {
+		out += '<ul>';
+		thing.forEach(item => {
+			out += `<li>${item['todo']}</li>`;
+		})
+		out += '</ul>';
+	}
+	eventOut.innerHTML = out;
 }
 
 function normalize(arr, left, right) {
@@ -263,6 +286,15 @@ function chunk(arr, n) {
 }
 
 /*
+
+ToDo:
+	- сделать кнопку
+	- навесить событие
+		- принимать массив календаря и массив с событием
+		- записывать один массив в другой (двумерный массив)
+	- навесить событие на кнопки календаря
+		- если числа сопадают, то считывается под массив м выводится на экран
+
 
 draw - отрисовка таблицы
 createTable - создание таблицы (вёрсика)
