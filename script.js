@@ -153,15 +153,19 @@ function draw(body, year, month) {
 function createTable(parent, arr) {
 	parent.textContent = '';
 	let cells = [];
+
+	// if(localStorage.getItem('arrTodo') != undefined) {
+	// 	arr = JSON.parse(localStorage.getItem('arrTodo'));
+	// }
 	
 	for(let sub of arr) {
 		let tr = document.createElement('tr');
 
 		for(let num of sub) {
 			let td = document.createElement('td');
-			td.textContent = num;
+			td.textContent = num.num;
 			tr.appendChild(td);
-
+			
 			cells.push(tr);
 		}
 		parent.appendChild(tr);
@@ -196,7 +200,6 @@ function setDate() {
 			arr[i-1] = todoArr;
 		}
 	})
-	console.log(arr);
 	localsetCalendar(arr);
 }
 
@@ -205,7 +208,11 @@ function localsetCalendar(arr) {
 }
 
 function localgetCalendar() {
-	let arr = range(getLastDay(year, month));	
+	let arr = range(getLastDay(year, month));
+	let firstWeekDay = getFirstWeekDay(year, month);
+	let lastWeekDay = getLastWeekDay(year, month);
+	arr = chunk(normalize(arr, firstWeekDay, 6 - lastWeekDay), 7);
+	
 	if(localStorage.getItem('arrTodo') != undefined) {
 		arr = JSON.parse(localStorage.getItem('arrTodo'));
 	}
@@ -229,10 +236,10 @@ function getEvent(el) {
 
 function normalize(arr, left, right) {
 	for (let i = 0; i < left; i++) {
-		arr.unshift('');
+		arr.unshift({num: '', status: false});
 	}
 	for (var i = 0; i < right; i++) {
-		arr.push('');
+		arr.push({num: '', status: false});
 	}
 	
 	return arr;	
@@ -268,7 +275,8 @@ function getLastDay(year, month) {
 function range(count) {
 	let arr = [];
 	for(i=1;i<=count;i++) {
-		arr.push(i);
+		// arr.push(i);
+		arr.push({num: i, status: false});
 	}
 	return arr;
 }
