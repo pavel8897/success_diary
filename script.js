@@ -205,12 +205,13 @@ function clickTd(item, i) {
 function delId(e) {
 	e.preventDefault();
 	let arr = localgetCalendar();
-
+	
 	if(this.classList.contains('note') || this.classList.contains('choice')) {
 		for(let sub of arr) {
 			for(let num of sub) {
 				if(num.num == this.innerHTML) {
 					num.event = '';
+					num.status = false;	
 					this.classList.remove('note');
 					this.classList.remove('choice');
 					eventOut.innerHTML = '';
@@ -218,7 +219,6 @@ function delId(e) {
 			}
 		}
 	}
-
 	localsetCalendar(arr);
 }
 
