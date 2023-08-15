@@ -98,6 +98,7 @@ let calendar = document.querySelector('#calendar');
 let body = document.querySelector('.body');
 let info = document.querySelector('.info');
 let addDate = document.querySelector('.addDate');
+let delDate = document.querySelector('.delDate');
 let eventOut = document.querySelector('.event');
 
 let prev = document.querySelector('.prev');
@@ -137,7 +138,7 @@ next.addEventListener('click', function() {
 	}
 	
 	info.textContent = year + ' ' + getMonthName(month);
-	draw(body, year, month)
+	draw(body, year, month);
 })
 
 function draw(body, year, month) {
@@ -147,6 +148,11 @@ function draw(body, year, month) {
 	let nums = chunk(normalize(arr, firstWeekDay, 6 - lastWeekDay), 7);
 	
 	createTable(body, nums);
+	let td = document.querySelectorAll('td');
+
+	td.forEach((item, i) => {
+		item.addEventListener('click', clickTd);
+	})
 	return arr;
 }
 
@@ -154,10 +160,12 @@ function createTable(parent, arr) {
 	parent.textContent = '';
 	let cells = [];
 
-	// if(localStorage.getItem('arrTodo') != undefined) {
-	// 	arr = JSON.parse(localStorage.getItem('arrTodo'));
-	// }
-	
+	let months = getMonthName(month);
+
+	if(localStorage.getItem(months) != undefined) {
+		arr = JSON.parse(localStorage.getItem(months));
+	}
+
 	for(let sub of arr) {
 		let tr = document.createElement('tr');
 
@@ -165,73 +173,115 @@ function createTable(parent, arr) {
 			let td = document.createElement('td');
 			td.textContent = num.num;
 			tr.appendChild(td);
-			
+			num.status && td.classList.add('note');
 			cells.push(tr);
 		}
 		parent.appendChild(tr);
 	}
-	
+
 	return cells;
 }
 
-
-let td = document.querySelectorAll('td');
 addDate.addEventListener('click', setDate);
+let td = document.querySelectorAll('td');
 
 td.forEach((item, i) => {
-	item.onclick = function() {
-		if(this.classList.contains('active')) {
-			this.classList.remove('active');
-		}else if(this.classList.contains('note')) {
-			getEvent(item);
-		}else{
-			td.forEach(item => item.classList.remove('active'));
-			this.classList.add('active');
-		}
-	}
+	item.addEventListener('click', clickTd);
+	item.addEventListener('contextmenu', delId);
 })
 
+function clickTd(item, i) {
+	let td = document.querySelectorAll('td');
+	if(this.classList.contains('active')) {
+		this.classList.remove('active');
+	}else if(this.classList.contains('note')) {
+		getEvent(this);
+	}else{
+		td.forEach(item => item.classList.remove('active'));
+		this.classList.add('active');
+	}
+}
+
+function delId(e) {
+	e.preventDefault();
+	let arr = localgetCalendar();
+
+	if(this.classList.contains('note') || this.classList.contains('choice')) {
+		for(let sub of arr) {
+			for(let num of sub) {
+				if(num.num == this.innerHTML) {
+					num.event = '';
+					this.classList.remove('note');
+					this.classList.remove('choice');
+					eventOut.innerHTML = '';
+				}
+			}
+		}
+	}
+
+	localsetCalendar(arr);
+}
+
 function setDate() {
+	let td = document.querySelectorAll('td');
 	let arr = localgetCalendar();
 	td.forEach((item, i) => {
 		if(item.classList.contains('active')) {
 			item.classList.remove('active');
 			item.classList.add('note');
-			arr[i-1] = todoArr;
+			for(let sub of arr) {
+				for(let num of sub) {
+					if(num.num == item.innerHTML) {
+						num.status = true;
+						num.event = todoArr;
+					}
+				}
+			}
 		}
 	})
 	localsetCalendar(arr);
 }
 
 function localsetCalendar(arr) {
-	localStorage.setItem('arrTodo', JSON.stringify(arr));
+	let months = getMonthName(month);
+	localStorage.setItem(months, JSON.stringify(arr));
 }
 
 function localgetCalendar() {
 	let arr = range(getLastDay(year, month));
 	let firstWeekDay = getFirstWeekDay(year, month);
 	let lastWeekDay = getLastWeekDay(year, month);
+	let months = getMonthName(month);
 	arr = chunk(normalize(arr, firstWeekDay, 6 - lastWeekDay), 7);
 	
-	if(localStorage.getItem('arrTodo') != undefined) {
-		arr = JSON.parse(localStorage.getItem('arrTodo'));
+	if(localStorage.getItem(months) != undefined) {
+		arr = JSON.parse(localStorage.getItem(months));
 	}
+
 	return arr;
 }
 
 function getEvent(el) {
 	let arr = localgetCalendar();
-	let thing = arr[el.innerHTML - 1];
 	let out = '';
-
-	if(Array.isArray(thing)) {
-		out += '<ul>';
-		thing.forEach(item => {
-			out += `<li>${item['todo']}</li>`;
-		})
-		out += '</ul>';
+	let td = document.querySelectorAll('td');
+	
+	for(let sub of arr) {		
+		for(let num of sub) {
+			if(num.num == el.innerHTML) {
+				if(Object.prototype.toString.call(num) === '[object Object]') {
+					td.forEach(item => item.classList.remove('choice'));
+					el.classList.add('choice');
+					out += '<ul>';
+					for(let key in num.event) {
+						out += `<li>${num.event[key].todo}</li>`;
+					}
+					out += '</ul>';
+				}
+				eventOut.innerHTML = out;
+			}
+		}
 	}
-	eventOut.innerHTML = out;
 }
 
 function normalize(arr, left, right) {
@@ -275,7 +325,6 @@ function getLastDay(year, month) {
 function range(count) {
 	let arr = [];
 	for(i=1;i<=count;i++) {
-		// arr.push(i);
 		arr.push({num: i, status: false});
 	}
 	return arr;
@@ -295,31 +344,23 @@ function chunk(arr, n) {
 
 /*
 
-ToDo:
-	- сделать кнопку
-	- навесить событие
-		- принимать массив календаря и массив с событием
-		- записывать один массив в другой (двумерный массив)
-	- навесить событие на кнопки календаря
-		- если числа сопадают, то считывается под массив м выводится на экран
+	draw - отрисовка таблицы
+	createTable - создание таблицы (вёрсика)
+	normalize - добавление пустых ячеек в начало и конец массива
+
+	getFirstWeekDay - получение номера первого дня недели
+	getLastWeekDay - получение номера последнего дня недели
+	getLastDay - получение последнего дня
+
+	range - создание массива
+	chunk - разделение массива
 
 
-draw - отрисовка таблицы
-createTable - создание таблицы (вёрсика)
-normalize - добавление пустых ячеек в начало и конец массива
+	1) получить количество дней в месяце
+	2) создать массив дней месяца
+	3) получить первый и последний день на неделе
+	4) сделать массив с пустыми ячейками
+	5) разбить массив по 7 дней в неделю
+	6) создать таблицу и вывести её в контейнер
 
-getFirstWeekDay - получение номера первого дня недели
-getLastWeekDay - получение номера последнего дня недели
-getLastDay - получение последнего дня
-
-range - создание массива
-chunk - разделение массива
-
-
-1) получить количество дней в месяце
-2) создать массив дней месяца
-3) получить первый и последний день на неделе
-4) сделать массив с пустыми ячейками
-5) разбить массив по 7 дней в неделю
-6) создать таблицу и вывести её в контейнер
 */

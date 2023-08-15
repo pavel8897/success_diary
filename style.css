@@ -60,6 +60,10 @@ input[type=text] {
 	background-color: green;
 	color: #000;
 }
+#calendar td.choice {
+	background-color: yellow;
+	color: #000;
+}
 #calendar td, #calendar th {
 	padding: 10px;
 	border: 1px solid black;
