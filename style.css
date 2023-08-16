@@ -3,6 +3,17 @@
 	margin: 0 auto;
 	display: flex;
 	gap: 40px;
+	flex-direction: column;
+}
+
+.block1 {
+	display: flex;
+	gap: 90px;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
 }
 
 .out {
@@ -38,6 +49,10 @@
 input[type=text] {
 	border: 2px solid grey;
 	padding: 5px 10px;
+}
+
+.block_event {
+	width: 400px;
 }
 
 /*Calendar*/

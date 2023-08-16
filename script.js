@@ -126,7 +126,7 @@ prev.addEventListener('click', function() {
 	}
 
 	info.textContent = year + ' ' + getMonthName(month);
-	draw(body, year, month)
+	draw(body, year, month);
 })
 
 next.addEventListener('click', function() {		
@@ -152,6 +152,7 @@ function draw(body, year, month) {
 
 	td.forEach((item, i) => {
 		item.addEventListener('click', clickTd);
+		item.addEventListener('contextmenu', delId);
 	})
 	return arr;
 }
@@ -190,7 +191,7 @@ td.forEach((item, i) => {
 	item.addEventListener('contextmenu', delId);
 })
 
-function clickTd(item, i) {
+function clickTd(item) {
 	let td = document.querySelectorAll('td');
 	if(this.classList.contains('active')) {
 		this.classList.remove('active');

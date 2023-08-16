@@ -8,37 +8,44 @@
 </head>
 <body>
 	<div class="container">
-		<div class="event"></div>
-		<div id="calendar">
-			<div class="info"></div>
-			<table>
-				<thead>
-					<tr>
-						<th>пн</th>
-						<th>вт</th>
-						<th>ср</th>
-						<th>чт</th>
-						<th>пт</th>
-						<th>сб</th>
-						<th>вс</th>
-					</tr>
-				</thead>
-				<tbody class="body"></tbody>
-			</table>
-			<div class="nav">
-				<a href="#" class="prev">←</a>
-				<a href="#" class="next">→</a>
+		<div class="block1">
+			<div id="calendar">
+				<div class="info"></div>
+				<table>
+					<thead>
+						<tr>
+							<th>пн</th>
+							<th>вт</th>
+							<th>ср</th>
+							<th>чт</th>
+							<th>пт</th>
+							<th>сб</th>
+							<th>вс</th>
+						</tr>
+					</thead>
+					<tbody class="body"></tbody>
+				</table>
+				<div class="nav">
+					<a href="#" class="prev">←</a>
+					<a href="#" class="next">→</a>
+				</div>
+				<button class="addDate">Добавить событие</button>
 			</div>
-			<button class="addDate">Добавить событие</button>
+			<div class="page_day">
+				<h3>Страница дня</h3>
+				<div class="todo">
+					<input type="text">
+					<button class="btn addCase" type="submit">Добавить успех</button>
+					<ul class="out"></ul>
+				</div>
+			</div>
 		</div>
-		<div class="page_day">
-			<h3>Страница дня</h3>
-			<div class="todo">
-				<input type="text">
-				<button class="btn addCase" type="submit">Добавить успех</button>
-				<ul class="out"></ul>
+		<div>
+			<div class="block_event">
+				<h3>Список дел:</h3>
+				<div class="event"></div>
 			</div>
-		</div>		
+		</div>
 	</div>
 	<script src="script.js"></script>
 </body>
